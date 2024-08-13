@@ -3,4 +3,5 @@ program FreeTBX
 
   ! Catch arguments from terminal and load system
   call LoadSystem()
+  call LoadHamiltonian()
 end program
