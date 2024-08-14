@@ -16,6 +16,5 @@ implicit-typing = false
 implicit-external = false
 source-form = "free"
 [dependencies]
-toml-f.git = "https://github.com/toml-f/toml-f"
 libfdf.git = "https://gitlab.com/nnardoto/libfdf"
 stdlib = "*"

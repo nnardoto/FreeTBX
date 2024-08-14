@@ -86,9 +86,9 @@ submodule (TBModel) Configuration
       MSize = hr_MSize
       nFock = hr_num
       allocate(Degen(nFock))           
-      allocate(H(nFock, MSize, MSize)) 
-      allocate(S(nFock, MSize, MSize)) 
-      allocate(iRn(nFock, 3))         
+      allocate(H(MSize, MSize, nFock)) 
+      allocate(S(MSize, MSize, nFock)) 
+      allocate(iRn(3, nFock))         
       print*, "Allocation Successful"
 
       call LoadHamiltonian()
@@ -125,10 +125,10 @@ submodule (TBModel) Configuration
         do i = 1, N 
           read(fp, *) l, m, n, ii, jj, R, Im
           idx = i / nM + 1 - (nM - mod(i, nM))/nM
-          iRn(idx, 1) = l
-          iRn(idx, 2) = m
-          iRn(idx, 3) = n
-          H(idx, ii, jj) = complex(R, Im)
+          iRn(1, idx) = l
+          iRn(2, idx) = m
+          iRn(3, idx) = n
+          H(ii, jj, idx) = complex(R, Im)
         enddo
       close(fp)
     end procedure LoadHamiltonian
@@ -161,10 +161,10 @@ submodule (TBModel) Configuration
         do i = 1, N                                                   
           read(fp, *) l, m, n, ii, jj, R, Im                          
           idx = i / nM + 1 - (nM - mod(i, nM))/nM                     
-          iRn(idx, 1) = l                                             
-          iRn(idx, 2) = m                                             
-          iRn(idx, 3) = n                                             
-          S(idx, ii, jj) = complex(R, Im)                             
+          iRn(1, idx) = l                                             
+          iRn(2, idx) = m                                             
+          iRn(3, idx) = n                                             
+          S(ii, jj, idx) = complex(R, Im)                             
         enddo                                                         
       close(fp)                                                       
     end procedure LoadOverlap                                                     

@@ -1,6 +1,7 @@
 module TBModel
   use fdf
   use iso_fortran_env, only : dp=>real64
+  use stdlib_linalg 
   
   implicit none
 
@@ -15,7 +16,7 @@ module TBModel
     integer :: MSize, nFock
     logical :: isOrthogonal
     integer, allocatable :: Degen(:), iRn(:,:)
-    complex(kind = dp), allocatable :: H(:,:,:), S(:,:,:)
+    complex, allocatable :: H(:,:,:), S(:,:,:)
 
   interface
  
@@ -33,10 +34,10 @@ module TBModel
     end subroutine                     
 
     ! To BandCalculation
-    module function BandCalc(Kp) result(EigVal)
+    module subroutine BandCalc(Kp, EigVal)
       integer,  dimension(3)     :: kp
-      real(dp), allocatable      :: EigVal(:) 
-    end function
+      real, allocatable      :: EigVal(:) 
+    end subroutine
 
   end interface
 

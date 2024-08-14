@@ -2,57 +2,52 @@ submodule (TBModel) BandCalculation
   contains
 
   module procedure BandCalc
-    use iso_fortran_env, only : dp=>real64
-    use stdlib_linalg, only : eigh, operator(.inv.)
-
     implicit none 
-    complex(dp), allocatable :: HH(:,:), SS(:,:), U(:,:), Ut(:,:), sqrtSS(:,:)
-    real(dp), allocatable    :: lambda(:)
-    
+    complex, parameter  :: J = (0.0d0, 2.0d0)
     integer :: Phi 
     integer  :: i, l, m, n
-    complex, parameter  :: J = (0.0d0, 2.0d0)
+    
+    complex, allocatable :: HH(:,:), SS(:,:), U(:,:), Ut(:,:)
+    real, allocatable    :: lambda(:,:), LL(:,:)
+    
+
 
 
   ! Allocation
+  allocate(EigVal(MSize))
   allocate(HH(MSize, MSize))
   allocate(SS(MSize, MSize))
- 
-  allocate(EigVal(MSize))
-
   allocate(U(MSize, MSize))
   allocate(Ut(MSize, MSize))
-  allocate(sqrtSS(MSize, MSize))
-  allocate(lambda(MSize))
+  allocate(lambda(MSIZE, 1))
+  allocate(LL(MSIZE, MSIZE))
 
   ! Initialize with zeros
   HH = (0.0d0, 0.0d0)
   SS = (0.0d0, 0.0d0)
 
-
   do i = 1, MSIZE 
-    l = iRn(i, 1)
-    m = iRn(i, 2)
-    n = iRn(i, 3)
+    l = iRn(1, i)
+    m = iRn(2, i)
+    n = iRn(3, i)
 
     Phi = Kp(1) * l + Kp(2) * m + Kp(3) * n
     
-    HH = HH + H(i,:,:) * exp(J*Phi*pi)
-    SS = SS + S(i,:,:) * exp(J*Phi*pi)
+    HH = HH + H(:,:, i) * exp(J*Phi*pi)
+    SS = SS + S(:,:, i) * exp(J*Phi*pi)
   enddo
 
-  ! Begin lowdin Diagonalization
-  call eigh(SS, lambda, vectors=U)
-  Ut = transpose(.inv.U)
-  sqrtSS = MATMUL(MATMUL(Ut, SS), U)
-  sqrtSS = SQRT(sqrtSS)
-  sqrtSS = MATMUL(MATMUL(U, sqrtSS), Ut)
+  ! todo Begin lowdin Diagonalization
+  call eigh(SS, lambda(:, 1), vectors = U)
+  SS = SQRT(MATMUL(eye(MSIZE, MSIZE), lambda))
+  Ut = TRANSPOSE(CONJG(U))
+  SS = MATMUL(MATMUL(Ut, SS), U)
+  SS = .inv.SS
+  HH = MATMUL(MATMUL(SS, HH), SS)
+  call eigh(HH, lambda(:, 1))
   
-  HH = MATMUL(MATMUL(sqrtSS, HH), sqrtSS)
-  call eigh(HH, lambda)
+  print*, lambda
   
-  EigVal = lambda
-
   end procedure BandCalc
 
 end submodule BandCalculation
