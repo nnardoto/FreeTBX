@@ -1,8 +1,21 @@
 module TBModel
   use fdf
+  use iso_fortran_env, only : dp=>real64
   
+  implicit none
+
   ! System information to load system
-  character(len = 200) :: SystemName, HFile, SFile
+  public :: LoadSystem
+  public :: LoadHamiltonian
+  public :: BandCalc
+  
+  private
+    real(dp), parameter  :: pi = 3.1415926535897932384626433832795028841971693
+    character(len = 200) :: SystemName, HFile, SFile
+    integer :: MSize, nFock
+    logical :: isOrthogonal
+    integer, allocatable :: Degen(:), iRn(:,:)
+    complex(kind = dp), allocatable :: H(:,:,:), S(:,:,:)
 
   interface
  
@@ -10,8 +23,20 @@ module TBModel
     module subroutine LoadSystem()
     end subroutine
 
+    module subroutine SysConfig() 
+    end subroutine                      
+    
     module subroutine LoadHamiltonian()
     end subroutine
+
+    module subroutine LoadOverlap() 
+    end subroutine                     
+
+    ! To BandCalculation
+    module function BandCalc(Kp) result(EigVal)
+      integer,  dimension(3)     :: kp
+      real(dp), allocatable      :: EigVal(:) 
+    end function
 
   end interface
 
