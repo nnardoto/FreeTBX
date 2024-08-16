@@ -76,24 +76,30 @@ submodule (TBModel) Configuration
 
       if(hr_num /= olp_num) then                                          
         print*, "The Number of Overlap Matrices are not equal to Fock Matrices" 
-        call exit()                                                           
+        call exit()                                     
       endif                                                                   
-
       ! ============================================================================= 
       !                             Allocation of Matrices                            
       ! ============================================================================= 
       print*, "Begin Allocation Process"
       MSize = hr_MSize
       nFock = hr_num
+
+      print*, "   ==> Number of Matrices  : ", nFock
+      print*, "   ==> Matrices Size (N,N) : ", MSize 
       allocate(Degen(nFock))           
-      allocate(H(MSize, MSize, nFock)) 
-      allocate(S(MSize, MSize, nFock)) 
-      allocate(iRn(3, nFock))         
+      allocate(H(nFock, MSize, MSize)) 
+      allocate(S(nFock, MSize, MSize)) 
+      allocate(iRn(nFock, 3))         
       print*, "Allocation Successful"
 
+      print*, "--> Loading Fock Matrices"
       call LoadHamiltonian()
+      print*, "--> Done!"
       if(isOrthogonal .eqv. .false.) then
+        print*, "--> Loading Overlap Matrices"
         call LoadOverlap()
+        print*, "--> Done!"
       endif
 
     end procedure SysConfig
@@ -125,10 +131,10 @@ submodule (TBModel) Configuration
         do i = 1, N 
           read(fp, *) l, m, n, ii, jj, R, Im
           idx = i / nM + 1 - (nM - mod(i, nM))/nM
-          iRn(1, idx) = l
-          iRn(2, idx) = m
-          iRn(3, idx) = n
-          H(ii, jj, idx) = complex(R, Im)
+          iRn(idx, 1) = l
+          iRn(idx, 2) = m
+          iRn(idx,3 ) = n
+          H(idx, jj, ii) = complex(R, Im)
         enddo
       close(fp)
     end procedure LoadHamiltonian
@@ -160,11 +166,11 @@ submodule (TBModel) Configuration
 
         do i = 1, N                                                   
           read(fp, *) l, m, n, ii, jj, R, Im                          
-          idx = i / nM + 1 - (nM - mod(i, nM))/nM                     
-          iRn(1, idx) = l                                             
-          iRn(2, idx) = m                                             
-          iRn(3, idx) = n                                             
-          S(ii, jj, idx) = complex(R, Im)                             
+          idx = i / nM + 1 - (nM - mod(i, nM))/nM 
+          iRn(idx, 1) = l                                             
+          iRn(idx, 2) = m                                             
+          iRn(idx, 3) = n                                             
+          S(idx, jj, ii) = complex(R, Im)                             
         enddo                                                         
       close(fp)                                                       
     end procedure LoadOverlap                                                     

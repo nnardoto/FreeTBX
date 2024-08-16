@@ -8,7 +8,6 @@ program FreeTBX
 
   ! Catch arguments from terminal and load system
   call LoadSystem()
-  print*, "TAMO AI"
   call BandCalc(RR, EigVal)
 
 end program

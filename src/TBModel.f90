@@ -1,7 +1,7 @@
 module TBModel
   use fdf
   use iso_fortran_env, only : dp=>real64
-  use stdlib_linalg 
+  use stdlib_linalg, only: eig, eigh, eye, is_hermitian, operator(.inv.) 
   
   implicit none
 
@@ -16,7 +16,7 @@ module TBModel
     integer :: MSize, nFock
     logical :: isOrthogonal
     integer, allocatable :: Degen(:), iRn(:,:)
-    complex, allocatable :: H(:,:,:), S(:,:,:)
+    complex(dp), allocatable :: H(:,:,:), S(:,:,:)
 
   interface
  
