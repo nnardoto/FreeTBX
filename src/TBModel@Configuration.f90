@@ -37,7 +37,7 @@ submodule (TBModel) Configuration
       ! grep to do calculations
       ! -----------------------------------------------
       ! todo organizaton of calculations to do
-      
+      call MakePath()
 
       ! Allocation of Matrices of System
       call SysConfig()
@@ -173,6 +173,51 @@ submodule (TBModel) Configuration
           S(idx, jj, ii) = complex(R, Im)                             
         enddo                                                         
       close(fp)                                                       
-    end procedure LoadOverlap                                                     
+    end procedure LoadOverlap                                                    
+
+
+    subroutine MakePath()
+      implicit none
+      type(parsed_line), pointer :: pline
+      type(block_fdf)            :: KPath
+      integer                    :: i, j, N
+
+      ! Get Number of KPOINTS
+      N = 0
+      if(fdf_block("KPath", KPath)) THEN 
+        do while(fdf_bline(KPath, pline))       
+          N = N + 1                    
+        enddo                            
+      endif       
+      call fdf_bclose(KPath)           
+
+      allocate(FullPath(N, 3))
+      allocate(nPath(N))
+
+    ! Save FullPath
+    if(fdf_block('KPath', KPath)) then
+      j = 1
+      do while(fdf_bline(KPath, pline))         
+          do i = 1, 3                       
+            FullPath(j, i) = fdf_breals(pline, i)
+            nPath(j)       = fdf_bintegers(pline, 1) 
+          enddo
+    
+          j = j + 1
+      enddo
+    endif                                 
+                                          
+    call fdf_bclose(KPath)                
+
+    end subroutine
+
+
+
+
+
+
+
+
+
                                                                       
 end submodule Configuration                                           

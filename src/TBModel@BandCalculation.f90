@@ -36,8 +36,8 @@ submodule (TBModel) BandCalculation
     Phi = l * Kp(1) + m * Kp(2) + n * Kp(3)
     do j = 1, MSize
       do k = 1, MSize
-        HH(j,k) = HH(j,k) + H(i, j,k)! * exp(J*Phi*pi)
-        SS(j,k) = SS(j,k) + S(i, j,k)! * exp(J*Phi*pi)
+        HH(j,k) = HH(j,k) + H(i, j,k) * exp(J*Phi*pi)
+        SS(j,k) = SS(j,k) + S(i, j,k) * exp(J*Phi*pi)
       enddo
     enddo
   enddo
@@ -62,7 +62,7 @@ submodule (TBModel) BandCalculation
   HH = MATMUL(MATMUL(SS, HH), SS)       
   
   call eigh(HH, rlambda)                
-  print*, rlambda
+  EigVal =  rlambda
   end procedure BandCalc
 
 end submodule BandCalculation
