@@ -4,7 +4,7 @@ submodule (TBModel) BandCalculation
   module procedure BandCalc
     implicit none 
     complex(dp), parameter  :: JJ = (0.0d0, 2.0d0)
-    integer :: Phi 
+    complex(dp) :: Phi 
     integer  :: i, j, k, l, m, n
     
     complex(dp), allocatable    :: HH(:,:), SS(:,:), U(:,:), Ut(:,:)
@@ -33,36 +33,27 @@ submodule (TBModel) BandCalculation
     m = iRn(i, 2)
     n = iRn(i, 3)
 
-    Phi = l * Kp(1) + m * Kp(2) + n * Kp(3)
-    do j = 1, MSize
-      do k = 1, MSize
-        HH(j,k) = HH(j,k) + H(i, j,k) * exp(J*Phi*pi)
-        SS(j,k) = SS(j,k) + S(i, j,k) * exp(J*Phi*pi)
-      enddo
-    enddo
+    Phi = JJ*pi*(l * Kp(1) + m * Kp(2) + n * Kp(3))
+    
+
+    HH = HH + H(i, :,:) * exp(Phi)
+    SS = SS + S(i, :,:) * exp(Phi)
   enddo
 
   ! todo Begin lowdin Diagonalization
-  call eig(SS, lambda, right = U)   
-  !Ut = TRANSPOSE(CONJG(U))              
-  U  = TRANSPOSE(U) 
-  Ut = .inv.TRANSPOSE(U)
-
-  !Do SQRT(S) 
-  SS = (0.0d0, 0.0d0)                   
-  lambda = SQRT(lambda)               
-  
-  do i = 1, MSize                       
-    SS(i,i) = lambda(i)                
-  enddo                                 
-  ! done SQRT(S) 
-  SS = .inv.SS                          
-                                        
-  SS = MATMUL(MATMUL(U, SS), Ut)        
-  HH = MATMUL(MATMUL(SS, HH), SS)       
+  !icall eigh(HH, rlambda, vectors = U)   
+!  SS = MATMUL(MATMUL(U, SS), Ut)        
+!  HH = MATMUL(MATMUL(SS, HH), SS)       
   
   call eigh(HH, rlambda)                
   EigVal =  rlambda
   end procedure BandCalc
+
+  function sqrtmat(A) result(B)
+    complex(dp), allocatable :: A(:,:), B(:,:), L(:,:)
+    real(dp), allocatable    :: LL(:,:)
+    real(dp)     :: Lambda(MSize, 1)
+
+  end function
 
 end submodule BandCalculation

@@ -1,6 +1,5 @@
 SystemName          hBN
-HFile               examples/hBN/OMX/hamiltonian.dat
-SFile               examples/hBN/OMX/overlap.dat
+HFile               examples/hBN/SK/hamiltonian.dat
 
 BandCalc            ON
 %block KPath

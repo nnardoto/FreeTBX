@@ -1,7 +1,7 @@
 module TBModel
   use fdf
   use iso_fortran_env, only : dp=>real64
-  use stdlib_linalg, only: eig, eigh, eye, is_hermitian, operator(.inv.) 
+  use stdlib_linalg, only: eig, eigh, eye, is_hermitian, inv 
   
   implicit none
 

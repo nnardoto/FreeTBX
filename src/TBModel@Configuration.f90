@@ -68,16 +68,18 @@ submodule (TBModel) Configuration
           print*, "Non Orthogonal System"
         close(olpFile)
       endif
-        
-      if(hr_MSize /= olp_MSize) then
-        print*, "The Size of Overlap Matrices are not equal to Fock Matrices"
-        call exit()
-      endif
+      
+      if(isOrthogonal .eqv. .false.) then
+        if(hr_MSize /= olp_MSize) then
+          print*, "The Size of Overlap Matrices are not equal to Fock Matrices"
+          call exit()
+        endif
 
-      if(hr_num /= olp_num) then                                          
-        print*, "The Number of Overlap Matrices are not equal to Fock Matrices" 
-        call exit()                                     
-      endif                                                                   
+        if(hr_num /= olp_num) then                                          
+          print*, "The Number of Overlap Matrices are not equal to Fock Matrices" 
+          call exit()                                     
+        endif
+      endif
       ! ============================================================================= 
       !                             Allocation of Matrices                            
       ! ============================================================================= 
@@ -211,13 +213,4 @@ submodule (TBModel) Configuration
 
     end subroutine
 
-
-
-
-
-
-
-
-
-                                                                      
 end submodule Configuration                                           

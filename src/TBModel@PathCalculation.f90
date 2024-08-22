@@ -3,12 +3,14 @@ submodule (TBModel) PathCalculation
 
   module procedure PathCalc
     implicit none
-    integer                ::  i, j, k, TotKp
+    integer                ::  i, j, k, TotKp, fp
+    character(len=:), allocatable :: BandFileName
     real(dp), dimension(3) ::  dk
     real(dp), allocatable  ::  Bands(:,:)
 
     ! Allocate Memory for BandCalculation
     TotKp = sum(nPath) - nPath(size(nPath)) + 1
+    print*, TotKp
     allocate(Bands(TotKp, MSize))
     k = 1
     do i = 1, size(nPath) - 1
@@ -18,16 +20,18 @@ submodule (TBModel) PathCalculation
         k = k + 1
       enddo
     enddo
-    !print*, k
-    !Bands(k, :) =  FullPath(size(nPath), :)
+    Bands(k, :) =  BandCalc(FullPath(size(nPath), :))
 
     !Escreve Bandas
+    BandFileName = trim(SystemName) // "_band.dat"
+    open(newunit = fp, file = BandFileName, action = 'write' )
     do j = 1, MSize
       do i = 1, TotKp
-        print*, i, Bands(i, j)
-      enddo
-        print*, ''
+        write(fp, *), i, Bands(i, j)
     enddo
+      write(fp, *), ''
+    enddo
+    close(fp)
 
   end procedure PathCalc
 
