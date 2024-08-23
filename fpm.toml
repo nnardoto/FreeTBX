@@ -5,16 +5,9 @@ author = "nnardoto"
 maintainer = "nnardoto@gmail.com"
 copyright = "Copyright 2024, nnardoto"
 [build]
-auto-executables = true
-auto-tests = true
-auto-examples = true
-module-naming = false
-[install]
-library = false
-[fortran]
-implicit-typing = false
-implicit-external = false
-source-form = "free"
+external-modules = ["stdlib_linalg"]
+link = ["fortran_stdlib"]
+[library]
+include-dir = "../..//Libraries/include/fortran_stdlib/GNU-13.2.0"
 [dependencies]
 libfdf.git = "https://gitlab.com/nnardoto/libfdf"
-stdlib = "*"
