@@ -12,7 +12,7 @@ submodule (TBModel) Configuration
       call get_command_argument(1, length = N)            
 
       if (N < 1) then
-        print*, "THERE IS NO INPUT FILE"
+        call TitleBox("THERE IS NO INPUT FILE")
         call exit()  
       endif
 
@@ -65,45 +65,52 @@ submodule (TBModel) Configuration
           read(olpFile, *) olp_MSize
           read(olpFile, *) olp_num
           isOrthogonal = .false.
-          print*, "Non Orthogonal System"
+          call TitleBox("NON ORTHOGONAL SYSTEM")
         close(olpFile)
+      else
+          call TitleBox("ORTHOGONAL SYSTEM")
       endif
       
       if(isOrthogonal .eqv. .false.) then
         if(hr_MSize /= olp_MSize) then
-          print*, "The Size of Overlap Matrices are not equal to Fock Matrices"
+          call TitleBox("The Size of Overlap Matrices are not equal to Fock Matrices")
           call exit()
         endif
 
         if(hr_num /= olp_num) then                                          
-          print*, "The Number of Overlap Matrices are not equal to Fock Matrices" 
+          call TitleBox("The Number of Overlap Matrices are not equal to Fock Matrices") 
           call exit()                                     
         endif
       endif
       ! ============================================================================= 
       !                             Allocation of Matrices                            
       ! ============================================================================= 
-      print*, "Begin Allocation Process"
+      call LTextBox("Beginning Allocation Process")
+      call LineBox()
       MSize = hr_MSize
       nFock = hr_num
 
-      print*, "   ==> Number of Matrices  : ", nFock
-      print*, "   ==> Matrices Size (N,N) : ", MSize 
+      call inLine("Number of Matrices", nFock)
+      call inLine("Matrices Size (N,N)", MSize) 
+      
       allocate(Degen(nFock))           
       allocate(H(nFock, MSize, MSize)) 
       allocate(S(nFock, MSize, MSize)) 
       allocate(iRn(nFock, 3))         
-      print*, "Allocation Successful"
-
-      print*, "--> Loading Fock Matrices"
+      
+      call TextBox("")
+      call LTextBox("::> Allocation Successful")
       call LoadHamiltonian()
-      print*, "--> Done!"
+      
+      call LTextBox("...> Fock Matrices Loaded")
+      
+      
       if(isOrthogonal .eqv. .false.) then
-        print*, "--> Loading Overlap Matrices"
         call LoadOverlap()
-        print*, "--> Done!"
+        call LTextBox("...> Overlap Matrices Loaded")
       endif
 
+    call LineBox()
     end procedure SysConfig
 
     module procedure LoadHamiltonian

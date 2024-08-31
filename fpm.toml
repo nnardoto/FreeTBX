@@ -4,10 +4,8 @@ license = "license"
 author = "nnardoto"
 maintainer = "nnardoto@gmail.com"
 copyright = "Copyright 2024, nnardoto"
-[build]
-external-modules = ["stdlib_linalg"]
-link = ["fortran_stdlib"]
-[library]
-include-dir = "../..//Libraries/include/fortran_stdlib/GNU-13.2.0"
 [dependencies]
-libfdf.git = "https://gitlab.com/nnardoto/libfdf"
+libfdf.git    = "https://gitlab.com/nnardoto/libfdf"
+TermTools.git = "https://github.com/nnardoto/TermTools"
+mfi           = { git="https://github.com/14NGiestas/mfi.git", branch="mfi-fpm" }
+openmp        = "*" 
