@@ -5,22 +5,16 @@ submodule (TBModel) BandCalculation
             complex(dp), parameter  :: JJ = (0.0d0, 2.0d0)
             complex(dp) :: Phi 
             complex(dp), allocatable :: HH(:,:)
-            integer  :: i, j, k, l, m, n
+            integer  :: i 
         
             ! Allocation
             allocate(HH(MSize, MSize))
             allocate(EigVal(MSize)) 
             
             ! Initialize with zeros
-            !    HH = (0.0d0, 0.0d0)
-            do i = 1, nFock 
-                l = iRn(i, 1)
-                m = iRn(i, 2)
-                n = iRn(i, 3)
-                
-                Phi = JJ*pi*(l * Kp(1) + m * Kp(2) + n * Kp(3))
-                
-                
+            HH = (0.0d0, 0.0d0)
+            do i = 1, nFock  
+                Phi = JJ*pi*dot_product(iRn(i,:), Kp)
                 HH = HH + H(i, :,:) * exp(Phi)
             enddo
             ! todo lowdin Diagonalization

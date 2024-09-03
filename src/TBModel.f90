@@ -23,6 +23,9 @@ module TBModel
         ! PathCalculation
         real(dp), allocatable :: FullPath(:,:)
         integer , allocatable :: nPath(:)
+
+        ! Parallel Variables
+        integer nThreads
     
     interface
         ! load and build the tight binding model for system

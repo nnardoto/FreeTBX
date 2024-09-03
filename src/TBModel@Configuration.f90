@@ -3,8 +3,18 @@ submodule (TBModel) Configuration
                                                  
     ! main routine for load and build the system
     module procedure LoadSystem
+      use OMP_LIB
       character(len=:), allocatable  :: FileName          
       integer                        :: N                 
+
+      !------------------------------------------------ 
+      ! Catch Number of Threads
+      !------------------------------------------------ 
+      nThreads = OMP_GET_MAX_THREADS() 
+      
+      call TitleBox("Parallelization Settings")
+      call LTextBox("::> Using OpenMP")
+      call inLine("...> Threads Number: ", nThreads)
 
       !------------------------------------------------ 
       ! load input file from command-line argument      
@@ -142,7 +152,7 @@ submodule (TBModel) Configuration
           idx = i / nM + 1 - (nM - mod(i, nM))/nM
           iRn(idx, 1) = l
           iRn(idx, 2) = m
-          iRn(idx,3 ) = n
+          iRn(idx, 3) = n
           H(idx, jj, ii) = complex(R, Im)
         enddo
       close(fp)

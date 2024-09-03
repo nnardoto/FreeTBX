@@ -31,21 +31,19 @@ submodule (TBModel) PathCalculation
       do j = 1, nPath(i)
         kpts(k, :) = FullPath(i, :) + (j - 1)*dk
         kLenght(k + 1) = kLenght(k) + NORM2(dk)
-       ! call inLine("kPoints Calculation Progress: ", k, TotKp)
         k = k + 1
       enddo
     enddo
     kpts(k, :) =  BandCalc(FullPath(size(nPath), :))
     
-    call inLine("kPoints Calculation Progress: ", k, TotKp)
+    !call inLine("kPoints Calculation Progress: ", k, TotKp)
+    !$omp parallel do private(i)  
+     do i = 1, TotKp 
+       Bands(i, :) = BandCalc(kpts(i, :))
+       !call inLine("kPoints Calculation Progress: ", i, TotKp, OMP_GET_THREAD_NUM())
+     enddo
+    !$omp end parallel do
     
-    !$omp do private(i)
-      do i = 1, TotKp
-        Bands(i, :) = BandCalc(kpts(i, :))
-      enddo
-    !$omp end do
-
-
     !Escreve Bandas
     BandFileName = trim(SystemName) // "_band.dat"
     open(newunit = fp, file = BandFileName, action = 'write' )
