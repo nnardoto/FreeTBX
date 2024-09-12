@@ -49,9 +49,9 @@ submodule (TBModel) PathCalculation
     open(newunit = fp, file = BandFileName, action = 'write' )
     do j = 1, MSize
       do i = 1, TotKp
-        write(fp, *), kLenght(i), Bands(i, j)
+        write(fp, *) kLenght(i), Bands(i, j)
     enddo
-      write(fp, *), ''
+      write(fp, *) ''
     enddo
     close(fp)
     
