@@ -1,0 +1,3 @@
+[submodule "build/dependencies/TermTools"]
+	path = build/dependencies/TermTools
+	url = git@github.com:nnardoto/TermTools.git

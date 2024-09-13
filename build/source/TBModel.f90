@@ -1,6 +1,6 @@
 module TBModel
     use fdf
-    use mfi_lapack
+    use stdlib_linalg
     use TermTools
     use iso_fortran_env, only : dp=>real64
     
