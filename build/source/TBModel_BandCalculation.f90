@@ -20,7 +20,7 @@ submodule (TBModel) BandCalculation
             ! todo lowdin Diagonalization
 
             ! Eigenvalue Calculation 
-            call mfi_heevd(HH, EigVal) 
+            call eigh(HH, EigVal) 
         end procedure BandCalc
 
         function sqrtmat(A) result(B)

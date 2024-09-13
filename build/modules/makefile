@@ -1,7 +1,7 @@
 INCLUDE = $(shell pkg-config --cflags fortran_stdlib) $(shell pkg-config --cflags libfdf) -I../dependencies/TermTools/library/ 
 SOURCE  = ../source/
 
-Finish: TBModel.mod TBModel_Configuration.mod TBModel_BandCalculation.mod TBModel_PathCalculation.mod
+all: TBModel.mod TBModel_Configuration.mod TBModel_BandCalculation.mod TBModel_PathCalculation.mod
 
 TBModel.mod: ${SOURCE}/TBModel.f90
 	gfortran -fsyntax-only $< ${INCLUDE}

@@ -1,21 +1,17 @@
-LIBS    = $(shell pkg-config --cflags fortran_stdlib) $(shell pkg-config --cflags libfdf) -I./objects/
-INCLUDE = $(shell pkg-config --libs fortran_stdlib) $(shell pkg-config --libs libfdf) -I./dependencies/TermTools/library/
+LIBS    = $(shell pkg-config --libs   fortran_stdlib) $(shell pkg-config --libs   libfdf) 
+INCLUDE = $(shell pkg-config --cflags fortran_stdlib) $(shell pkg-config --cflags libfdf) 
 
-OBJ_DIR = objects
-MOD_DIR = modules
+OBJ_DIR = ./objects
+MOD_DIR = ./modules
+SRC_DIR = ./source
 
 
-${OBJ_DIR}/TBModel.o: ${OBJ_DIR}/TBModel@Configuration.o ${OBJ_DIR}/TBModel@PathCalculation.o ${OBJ_DIR}/TBModel@BandCalculation.o
-	echo "Uhuuul!"	
+FreeTBX.x: ${SRC_DIR}/FreeTBX.f90
+	make -C dependencies/TermTools
+	make -C modules all
+	make -C objects all
+	gfortran $< ${OBJ_DIR}/*.o -I${MOD_DIR} -o $@ ${INCLUDE} ${LIBS} -fopenmp 
 
-${OBJ_DIR}/TBModel@Configuration.o: TBModel@Configuration.f90
-	gfortran -c $< -J ${MOD_DIR} -I${MOD_DIR} -o $@
-
-${OBJ_DIR}/TBModel@BandCalculation.o: TBModel@BandCalculation.f90
-	gfortran -c $< -J ${MOD_DIR} -I${MOD_DIR} -o $@
-
-${OBJ_DIR}/TBModel@PathCalculation.o: TBModel@PathCalculation.f90
-	gfortran -c $< -J ${MOD_DIR} -I${MOD_DIR} -o $@
-
-${MOD_DIR}/TBModel.mod:
-	gfortran -fsyntax-only TBModel.f90 -J${MOD_DIR} ${INCLUDE} ${LIBS}
+clean:
+	make -C ./objects clean
+	make -C ./modules clean
